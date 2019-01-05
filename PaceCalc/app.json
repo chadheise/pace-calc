@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Pace Calc",
+    "slug": "pace-calc",
+    "description": "App for quickly calculating and converting running paces to different distances and units",
+    "privacy": "public",
+    "sdkVersion": "32.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#282828"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.manorllc.paceCalc",
+      "buildNumber": "1.0.0",
+      "supportsTablet": false,
+      "usesIcloudStorage": false
+    },
+    "android": {
+      "package": "com.manorllc.paceCalc",
+      "versionCode": 1
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#282828",
+      "barStyle": "light-content"
+    },
+    "primaryColor": "#282828",
+    "githubUrl": "https://github.com/chadheise/pace-calc"
+  }
+}
