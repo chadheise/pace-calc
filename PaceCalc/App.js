@@ -187,13 +187,13 @@ export default class App extends Component<Props, State> {
 
   _kmPerHour(): number {
     totalSeconds = timeToSeconds(this.state.time);
-    hours = (totalSeconds * 1.0) / 60;
+    hours = (totalSeconds * 1.0) / (60 * 60);
     return this.state.distance / hours;
   }
 
   _milesPerHour(): number {
     totalSeconds = timeToSeconds(this.state.time);
-    hours = (totalSeconds * 1.0) / 60;
+    hours = (totalSeconds * 1.0) / (60 * 60);
     return kmToMiles(this.state.distance) / hours;
   }
 
