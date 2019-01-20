@@ -28,12 +28,13 @@ export default class TimeInputPart extends Component<Props> {
       <TouchableOpacity onPress={this._focusTextInput} style={styles.container}>
         <View style={sharedStyles.wrapper}>
           <TextInput
-            ref={c => (this._textInput = c)}
-            keyboardType="number-pad"
-            returnKeyType="done"
             keyboardAppearance="dark"
+            keyboardType="number-pad"
             onChangeText={this._onChangeText}
+            ref={c => (this._textInput = c)}
+            returnKeyType="done"
             style={sharedStyles.hiddenTextInput}
+            value={this.props.value.toString()}
           />
           <Text style={[sharedStyles.text, styles.text]}>
             {this.props.value} {this.props.unit}

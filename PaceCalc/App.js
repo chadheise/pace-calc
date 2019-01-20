@@ -164,37 +164,43 @@ export default class App extends Component<Props, State> {
     if (unit === "mi") {
       distance = milesToKm(distance);
     }
-    this.setState({
-      distance: distance
-    });
+    if (distance < 16093.45) { // Max input allowed is 10000 mi
+      this.setState({
+        distance: distance
+      });
+    }
   };
 
   _setTime(time: Time) {
-    this.setState({
-      time: time
-    });
+    if (0 <= time.hr && time.hr < 100 && 
+      0 <= time.min && time.min < 60 &&
+      0 <= time.sec && time.sec < 60) {
+        this.setState({
+          time: time
+        });
+    }
   }
 
   _secondsPerKm(): number {
     totalSeconds = timeToSeconds(this.state.time);
-    return totalSeconds / this.state.distance;
+    return this.state.distance > 0 ? totalSeconds / this.state.distance : 0;
   }
 
   _secondsPerMile(): number {
     totalSeconds = timeToSeconds(this.state.time);
-    return totalSeconds / kmToMiles(this.state.distance);
+    return this.state.distance > 0 ? totalSeconds / kmToMiles(this.state.distance) : 0;
   }
 
   _kmPerHour(): number {
     totalSeconds = timeToSeconds(this.state.time);
     hours = (totalSeconds * 1.0) / (60 * 60);
-    return this.state.distance / hours;
+    return hours > 0 ? this.state.distance / hours : 0;
   }
 
   _milesPerHour(): number {
     totalSeconds = timeToSeconds(this.state.time);
     hours = (totalSeconds * 1.0) / (60 * 60);
-    return kmToMiles(this.state.distance) / hours;
+    return hours > 0 ? kmToMiles(this.state.distance) / hours : 0;
   }
 
   // TODO: move this to TimeUtils.js

@@ -20,10 +20,20 @@ type Props = {
   onChange: number => void
 };
 
-export default class DistanceInput extends Component<Props> {
+type State = {
+  hasDecimalEnding: boolean,
+}
+
+export default class DistanceInput extends Component<Props, State> {
+  state = {
+    hasDecimalEnding: false,
+  }
+
   _textInput: ?TextInput;
 
   render() {
+    const textInputValue = this.state.hasDecimalEnding ? this.props.distance.toString() + "." : this.props.distance.toString();
+
     return (
       <TouchableOpacity
         onPress={this._focusTextInput}
@@ -31,15 +41,16 @@ export default class DistanceInput extends Component<Props> {
       >
         <View style={sharedStyles.wrapper}>
           <TextInput
-            ref={c => (this._textInput = c)}
-            keyboardType="numeric"
-            returnKeyType="done"
             keyboardAppearance="dark"
+            keyboardType="numeric"
+            ref={c => (this._textInput = c)}
+            returnKeyType="done"
             onChangeText={this._onChangeText}
             style={sharedStyles.hiddenTextInput}
+            value={textInputValue}
           />
           <Text style={[sharedStyles.text, styles.text]}>
-            {this.props.distance} {this.props.unit}
+            {textInputValue} {this.props.unit}
           </Text>
         </View>
       </TouchableOpacity>
@@ -51,6 +62,19 @@ export default class DistanceInput extends Component<Props> {
   };
 
   _onChangeText = (text: string) => {
+    // Trim duplicate trailing decimals
+    if (text[text.length - 1] === '.' && text[text.length - 2] === '.') {
+      text = text.substring(0, text.length - 1);
+    }
+
+    const decimalIndex = text.indexOf('.');
+    this.setState({
+      hasDecimalEnding: text.length > 0 && decimalIndex === text.length - 1,
+    })
+
+    const hasDecimal = decimalIndex != - 1;
+    // Only allow 2 decimal places as input
+    text = hasDecimal ? text.substring(0, decimalIndex + 3) : text;
     this.props.onChange(Number(text));
   };
 }
