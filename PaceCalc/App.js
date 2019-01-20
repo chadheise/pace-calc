@@ -33,7 +33,10 @@ export default class App extends Component<Props, State> {
 
   render() {
     return (
-      <ScrollView bounces={false} style={styles.scrollView}>
+      <ScrollView
+        bounces={false}
+        keyboardShouldPersistTaps={'handled'}
+        style={styles.scrollView}>
       <View style={styles.container}>
         <Header title="Distance" />
         <View style={styles.distanceButtonContainer}>
