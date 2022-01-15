@@ -1,7 +1,7 @@
 /*
-* @flow strict
-*/
-import React, {Component} from "react";
+ * @flow strict
+ */
+import React, { Component } from "react";
 import {
   AppRegistry,
   Button,
@@ -9,30 +9,22 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
-import {colors, sharedStyles} from "../utils/styles";
+import { colors, sharedStyles } from "../utils/styles";
 
 type Props = {
-  distance: number,
+  distance: string,
   unit: "km" | "mi",
-  onChange: number => void
+  onChange: (distance: string) => void,
 };
 
-type State = {
-  hasDecimalEnding: boolean,
-}
-
 export default class DistanceInput extends Component<Props, State> {
-  state = {
-    hasDecimalEnding: false,
-  }
-
   _textInput: ?TextInput;
 
   render() {
-    const textInputValue = this.state.hasDecimalEnding ? this.props.distance.toString() + "." : this.props.distance.toString();
+    const textInputValue = this._sanitizeText(this.props.distance);
 
     return (
       <TouchableOpacity
@@ -43,7 +35,7 @@ export default class DistanceInput extends Component<Props, State> {
           <TextInput
             keyboardAppearance="dark"
             keyboardType="numeric"
-            ref={c => (this._textInput = c)}
+            ref={(c) => (this._textInput = c)}
             returnKeyType="done"
             onChangeText={this._onChangeText}
             style={sharedStyles.hiddenTextInput}
@@ -61,31 +53,38 @@ export default class DistanceInput extends Component<Props, State> {
     this._textInput && this._textInput.focus();
   };
 
-  _onChangeText = (text: string) => {
+  _sanitizeText = (text: string) => {
     // Trim duplicate trailing decimals
-    if (text[text.length - 1] === '.' && text[text.length - 2] === '.') {
+    if (text[text.length - 1] === "." && text[text.length - 2] === ".") {
       text = text.substring(0, text.length - 1);
     }
 
-    const decimalIndex = text.indexOf('.');
-    this.setState({
-      hasDecimalEnding: text.length > 0 && decimalIndex === text.length - 1,
-    })
+    // If it starts with decminal, prefix with 0
+    if (text[0] === ".") {
+      text = "0" + text;
+    }
 
-    const hasDecimal = decimalIndex != - 1;
     // Only allow 2 decimal places as input
+    const decimalIndex = text.indexOf(".");
+    const hasDecimal = decimalIndex != -1;
     text = hasDecimal ? text.substring(0, decimalIndex + 3) : text;
-    this.props.onChange(Number(text));
+
+    return text;
+  };
+
+  _onChangeText = (text: string) => {
+    text = this._sanitizeText(text);
+    this.props.onChange(text);
   };
 }
 
 const styles = StyleSheet.create({
   button: {
-    borderColor: colors.accent1
+    borderColor: colors.accent1,
   },
   text: {
-    color: colors.accent1
-  }
+    color: colors.accent1,
+  },
 });
 
 AppRegistry.registerComponent("DistanceInput", () => DistanceInput);

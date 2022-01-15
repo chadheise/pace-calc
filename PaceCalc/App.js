@@ -10,7 +10,12 @@ import TimeInput from "./src/components/TimeInput";
 
 import type Time from "./src/utils/TimeUtils";
 
-import { kmToMiles, milesToKm, round } from "./src/utils/DistanceUtils";
+import {
+  round,
+  distanceStringToKm,
+  distanceStringToKmString,
+  distanceStringToMiString,
+} from "./src/utils/DistanceUtils";
 import {
   secondsPerKm,
   secondsPerMile,
@@ -23,13 +28,15 @@ import { colors } from "./src/utils/styles";
 type Props = {};
 
 type State = {
-  distance: number, // Always stored in km
+  distanceString: string,
+  distanceUnit: "mi" | "km",
   time: Time,
 };
 
 export default class App extends Component<Props, State> {
   state = {
-    distance: 1.609344,
+    distanceString: "1",
+    distanceUnit: "mi",
     time: {
       hr: 0,
       min: 0,
@@ -50,45 +57,51 @@ export default class App extends Component<Props, State> {
             <DistanceButton
               distance={5}
               unit="km"
-              onPress={() => this._setDistance(5, "km")}
+              onPress={() => this._setDistance("5", "km")}
             />
             <DistanceButton
               distance={10}
               unit="km"
-              onPress={() => this._setDistance(10, "km")}
+              onPress={() => this._setDistance("10", "km")}
             />
             <DistanceButton
               distance={15}
               unit="km"
-              onPress={() => this._setDistance(15, "km")}
+              onPress={() => this._setDistance("15", "km")}
             />
             <DistanceButton
               distance={20}
               unit="km"
-              onPress={() => this._setDistance(20, "km")}
+              onPress={() => this._setDistance("20", "km")}
             />
             <DistanceButton
               distance={13.1}
               unit="mi"
-              onPress={() => this._setDistance(13.1, "mi")}
+              onPress={() => this._setDistance("13.1", "mi")}
             />
             <DistanceButton
               distance={26.2}
               unit="mi"
-              onPress={() => this._setDistance(26.2, "mi")}
+              onPress={() => this._setDistance("26.2", "mi")}
             />
           </View>
 
           <DistanceInput
-            distance={round(kmToMiles(this.state.distance), 2)}
+            distance={distanceStringToMiString(
+              this.state.distanceString,
+              this.state.distanceUnit
+            )}
             unit="mi"
-            onChange={(num) => {
-              this._setDistance(num, "mi");
+            onChange={(distance: string) => {
+              this._setDistance(distance, "mi");
             }}
           />
 
           <DistanceInput
-            distance={round(this.state.distance, 2)}
+            distance={distanceStringToKmString(
+              this.state.distanceString,
+              this.state.distanceUnit
+            )}
             unit="km"
             onChange={(num) => {
               this._setDistance(num, "km");
@@ -108,7 +121,13 @@ export default class App extends Component<Props, State> {
             <PaceBlock
               text={
                 formatSecondsAsTime(
-                  secondsPerMile(this.state.time, this.state.distance)
+                  secondsPerMile(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  )
                 ) + " /mi"
               }
             />
@@ -116,7 +135,13 @@ export default class App extends Component<Props, State> {
             <PaceBlock
               text={
                 formatSecondsAsTime(
-                  secondsPerKm(this.state.time, this.state.distance)
+                  secondsPerKm(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  )
                 ) + " /km"
               }
             />
@@ -125,15 +150,31 @@ export default class App extends Component<Props, State> {
           <View style={styles.splitContainer}>
             <PaceBlock
               text={
-                round(milesPerHour(this.state.time, this.state.distance), 3) +
-                " mi/hr"
+                round(
+                  milesPerHour(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ),
+                  3
+                ) + " mi/hr"
               }
             />
 
             <PaceBlock
               text={
-                round(kmPerHour(this.state.time, this.state.distance), 3) +
-                " km/hr"
+                round(
+                  kmPerHour(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ),
+                  3
+                ) + " km/hr"
               }
             />
           </View>
@@ -145,7 +186,13 @@ export default class App extends Component<Props, State> {
               text={
                 "5 km: " +
                 formatSecondsAsTime(
-                  secondsPerKm(this.state.time, this.state.distance) * 5
+                  secondsPerKm(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ) * 5
                 )
               }
             />
@@ -154,7 +201,13 @@ export default class App extends Component<Props, State> {
               text={
                 "10 km: " +
                 formatSecondsAsTime(
-                  secondsPerKm(this.state.time, this.state.distance) * 10
+                  secondsPerKm(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ) * 10
                 )
               }
             />
@@ -165,7 +218,13 @@ export default class App extends Component<Props, State> {
               text={
                 "15 km: " +
                 formatSecondsAsTime(
-                  secondsPerKm(this.state.time, this.state.distance) * 15
+                  secondsPerKm(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ) * 15
                 )
               }
             />
@@ -174,7 +233,13 @@ export default class App extends Component<Props, State> {
               text={
                 "20 km: " +
                 formatSecondsAsTime(
-                  secondsPerKm(this.state.time, this.state.distance) * 20
+                  secondsPerKm(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ) * 20
                 )
               }
             />
@@ -185,7 +250,13 @@ export default class App extends Component<Props, State> {
               text={
                 "13.1 mi: " +
                 formatSecondsAsTime(
-                  secondsPerMile(this.state.time, this.state.distance) * 13.1
+                  secondsPerMile(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ) * 13.1
                 )
               }
             />
@@ -194,7 +265,13 @@ export default class App extends Component<Props, State> {
               text={
                 "26.2 mi: " +
                 formatSecondsAsTime(
-                  secondsPerMile(this.state.time, this.state.distance) * 26.2
+                  secondsPerMile(
+                    this.state.time,
+                    distanceStringToKm(
+                      this.state.distanceString,
+                      this.state.distanceUnit
+                    )
+                  ) * 26.2
                 )
               }
             />
@@ -204,16 +281,17 @@ export default class App extends Component<Props, State> {
     );
   }
 
-  _setDistance = (distance: number, unit: string) => {
-    if (unit === "mi") {
-      distance = milesToKm(distance);
+  _setDistance = (distance: string, unit: "km" | "mi") => {
+    // Max input is 9 characters
+    // This cannot be done inside DistanceInput because restricting the character count when inputing in km would artificially restrict the converted amount in miles and vice-versa
+    if (distance.length > 9) {
+      distance = distance.substring(0, 9);
     }
-    if (distance < 16093.45) {
-      // Max input allowed is 10000 mi
-      this.setState({
-        distance: distance,
-      });
-    }
+
+    this.setState({
+      distanceString: distance,
+      distanceUnit: unit,
+    });
   };
 
   _setTime(time: Time) {
