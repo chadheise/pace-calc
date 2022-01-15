@@ -4,7 +4,6 @@
     "slug": "pace-calc",
     "description": "App for quickly calculating and converting running paces to different distances and units",
     "privacy": "public",
-    "sdkVersion": "44.0.0",
     "platforms": [
       "ios",
       "android"
