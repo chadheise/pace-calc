@@ -17,3 +17,10 @@ but this will work:
 To upload to apple for submission:
 1. Open XCode
 2. XCode > Open Developer Tool > Application Loader
+
+## Building for simulator
+* https://docs.expo.dev/build-reference/simulators/
+```
+cd PaceCalc
+eas build -p ios --profile preview
+```
