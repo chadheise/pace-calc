@@ -4,3 +4,16 @@ This app allows you to quickly determine your proportional race times based on y
 
 ## Getting Started
 Open the PaceCalc directory and run `npm start` to start the expo server
+
+## Building for production
+See https://docs.expo.io/versions/latest/distribution/building-standalone-apps.html
+
+Tips: If testing the compiled app in the iOS simulator make sure to include the '.app' extension when installing the app.
+e.g. This will fail:
+`xcrun simctl install booted pace-calc`
+but this will work:
+`xcrun simctl install booted pace-calc.app`
+
+To upload to apple for submission:
+1. Open XCode
+2. XCode > Open Developer Tool > Application Loader
