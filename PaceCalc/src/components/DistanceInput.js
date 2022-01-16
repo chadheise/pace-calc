@@ -1,7 +1,8 @@
 /*
  * @flow strict
  */
-import React, { Component } from "react";
+import React, { Component, useRef } from "react";
+
 import {
   AppRegistry,
   Button,
@@ -20,63 +21,61 @@ type Props = {
   onChange: (distance: string) => void,
 };
 
-export default class DistanceInput extends Component<Props, State> {
-  _textInput: ?TextInput;
+export default function DistanceInput(props: Props): React.Node {
+  const inputRef = useRef<TextInput>(null);
 
-  render() {
-    const textInputValue = this._sanitizeText(this.props.distance);
+  const focusTextInput = () => {
+    inputRef.current.focus();
+  };
 
-    return (
-      <TouchableOpacity
-        onPress={this._focusTextInput}
-        style={[sharedStyles.mainButton, styles.button]}
-      >
-        <View style={sharedStyles.wrapper}>
-          <TextInput
-            keyboardAppearance="dark"
-            keyboardType="numeric"
-            ref={(c) => (this._textInput = c)}
-            returnKeyType="done"
-            onChangeText={this._onChangeText}
-            style={sharedStyles.hiddenTextInput}
-            value={textInputValue}
-          />
-          <Text style={[sharedStyles.text, styles.text]}>
-            {textInputValue} {this.props.unit}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
+  const onChangeText = (text: string) => {
+    text = sanitizeText(text);
+    props.onChange(text);
+  };
+
+  const textInputValue = sanitizeText(props.distance);
+
+  return (
+    <TouchableOpacity
+      onPress={focusTextInput}
+      style={[sharedStyles.mainButton, styles.button]}
+    >
+      <View style={sharedStyles.wrapper}>
+        <TextInput
+          keyboardAppearance="dark"
+          keyboardType="numeric"
+          ref={inputRef}
+          returnKeyType="done"
+          onChangeText={onChangeText}
+          style={sharedStyles.hiddenTextInput}
+          value={textInputValue}
+        />
+        <Text style={[sharedStyles.text, styles.text]}>
+          {textInputValue} {props.unit}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+function sanitizeText(text: string): string {
+  // Trim duplicate trailing decimals
+  const prefix = text.substring(0, text.length - 1);
+  if (prefix.includes(".") && text[text.length - 1] === ".") {
+    text = text.substring(0, text.length - 1);
   }
 
-  _focusTextInput = () => {
-    this._textInput && this._textInput.focus();
-  };
+  // If it starts with decminal, prefix with 0
+  if (text[0] === ".") {
+    text = "0" + text;
+  }
 
-  _sanitizeText = (text: string) => {
-    // Trim duplicate trailing decimals
-    const prefix = text.substring(0, text.length - 1);
-    if (prefix.includes(".") && text[text.length - 1] === ".") {
-      text = text.substring(0, text.length - 1);
-    }
+  // Only allow 2 decimal places as input
+  const decimalIndex = text.indexOf(".");
+  const hasDecimal = decimalIndex != -1;
+  text = hasDecimal ? text.substring(0, decimalIndex + 3) : text;
 
-    // If it starts with decminal, prefix with 0
-    if (text[0] === ".") {
-      text = "0" + text;
-    }
-
-    // Only allow 2 decimal places as input
-    const decimalIndex = text.indexOf(".");
-    const hasDecimal = decimalIndex != -1;
-    text = hasDecimal ? text.substring(0, decimalIndex + 3) : text;
-
-    return text;
-  };
-
-  _onChangeText = (text: string) => {
-    text = this._sanitizeText(text);
-    this.props.onChange(text);
-  };
+  return text;
 }
 
 const styles = StyleSheet.create({

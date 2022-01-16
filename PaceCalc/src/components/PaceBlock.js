@@ -1,7 +1,7 @@
 /*
-* @flow strict
-*/
-import React, {Component} from "react";
+ * @flow strict
+ */
+import React, { Component } from "react";
 import {
   AppRegistry,
   Button,
@@ -9,38 +9,32 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
-import {colors, sharedStyles} from "../utils/styles";
+import { colors, sharedStyles } from "../utils/styles";
 
 type Props = {
-  text: string
+  text: string,
 };
 
-export default class PaceBlock extends Component<Props> {
-  render() {
-    return (
-      <View
-        style={[
-          sharedStyles.mainButton,
-          sharedStyles.splitBlock,
-          styles.button
-        ]}
-      >
-        <Text style={[sharedStyles.text, styles.text]}>{this.props.text}</Text>
-      </View>
-    );
-  }
+export default function PaceBlock(props: Props): React.Node {
+  return (
+    <View
+      style={[sharedStyles.mainButton, sharedStyles.splitBlock, styles.button]}
+    >
+      <Text style={[sharedStyles.text, styles.text]}>{props.text}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   button: {
-    borderColor: colors.accent3
+    borderColor: colors.accent3,
   },
   text: {
-    color: colors.accent3
-  }
+    color: colors.accent3,
+  },
 });
 
 AppRegistry.registerComponent("PaceBlock", () => PaceBlock);

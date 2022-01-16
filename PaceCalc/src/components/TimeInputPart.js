@@ -1,7 +1,7 @@
 /*
-* @flow strict
-*/
-import React, {Component} from "react";
+ * @flow strict
+ */
+import React, { Component, useRef } from "react";
 import {
   AppRegistry,
   Button,
@@ -9,59 +9,57 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
-import {colors, sharedStyles} from "../utils/styles";
+import { colors, sharedStyles } from "../utils/styles";
 
 type Props = {
   unit: "hr" | "min" | "sec",
   value: number,
-  onChange: number => void
+  onChange: (number) => void,
 };
 
-export default class TimeInputPart extends Component<Props> {
-  _textInput: ?TextInput;
+export default function TimeInputPart(props: Props) {
+  const inputRef = useRef<TextInput>(null);
 
-  render() {
-    return (
-      <TouchableOpacity onPress={this._focusTextInput} style={styles.container}>
-        <View style={sharedStyles.wrapper}>
-          <TextInput
-            keyboardAppearance="dark"
-            keyboardType="number-pad"
-            onChangeText={this._onChangeText}
-            ref={c => (this._textInput = c)}
-            returnKeyType="done"
-            style={sharedStyles.hiddenTextInput}
-            value={this.props.value.toString()}
-          />
-          <Text style={[sharedStyles.text, styles.text]}>
-            {this.props.value} {this.props.unit}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  _focusTextInput = () => {
-    this._textInput && this._textInput.focus();
+  const focusTextInput = () => {
+    inputRef.current.focus();
   };
 
-  _onChangeText = (text: string) => {
-    this.props.onChange(Number(text));
+  const onChangeText = (text: string) => {
+    props.onChange(Number(text));
   };
+
+  return (
+    <TouchableOpacity onPress={focusTextInput} style={styles.container}>
+      <View style={sharedStyles.wrapper}>
+        <TextInput
+          keyboardAppearance="dark"
+          keyboardType="number-pad"
+          onChangeText={onChangeText}
+          ref={inputRef}
+          returnKeyType="done"
+          style={sharedStyles.hiddenTextInput}
+          value={props.value.toString()}
+        />
+        <Text style={[sharedStyles.text, styles.text]}>
+          {props.value} {props.unit}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     marginBottom: 10,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   text: {
-    color: colors.accent2
-  }
+    color: colors.accent2,
+  },
 });
 
 AppRegistry.registerComponent("TimeInputPart", () => TimeInputPart);
