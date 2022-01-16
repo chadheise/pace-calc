@@ -55,7 +55,8 @@ export default class DistanceInput extends Component<Props, State> {
 
   _sanitizeText = (text: string) => {
     // Trim duplicate trailing decimals
-    if (text[text.length - 1] === "." && text[text.length - 2] === ".") {
+    const prefix = text.substring(0, text.length - 1);
+    if (prefix.includes(".") && text[text.length - 1] === ".") {
       text = text.substring(0, text.length - 1);
     }
 
