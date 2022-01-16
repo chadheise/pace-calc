@@ -36,9 +36,11 @@ const styles = StyleSheet.create({
     borderColor: colors.accent1,
     borderStyle: "solid",
     padding: 3,
+    marginVertical: 5,
   },
   text: {
     color: colors.accent1,
+    fontSize: 12,
   },
 });
 

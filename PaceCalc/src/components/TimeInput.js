@@ -61,6 +61,7 @@ export default function TimeInput(props: Props): React.Node {
 const styles = StyleSheet.create({
   button: {
     borderColor: colors.accent2,
+    flexWrap: "wrap",
   },
 });
 

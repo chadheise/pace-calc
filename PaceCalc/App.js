@@ -159,7 +159,7 @@ export default function App(props: Props): React.Node {
                   time,
                   distanceStringToKm(distance.label, distance.unit)
                 ),
-                3
+                2
               ) + " mi/hr"
             }
           />
@@ -171,7 +171,7 @@ export default function App(props: Props): React.Node {
                   time,
                   distanceStringToKm(distance.label, distance.unit)
                 ),
-                3
+                2
               ) + " km/hr"
             }
           />
@@ -273,9 +273,8 @@ const styles = StyleSheet.create({
   },
   distanceButtonContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between",
-    marginTop: 10,
-    marginBottom: 10,
     width: "100%",
   },
   scrollView: {
