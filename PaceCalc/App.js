@@ -274,6 +274,8 @@ const styles = StyleSheet.create({
   distanceButtonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginTop: 10,
+    marginBottom: 10,
     width: "100%",
   },
   scrollView: {
