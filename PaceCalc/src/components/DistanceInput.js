@@ -19,6 +19,7 @@ type Props = {
   distance: string,
   unit: "km" | "mi",
   onChange: (distance: string) => void,
+  onFocus: () => void,
 };
 
 export default function DistanceInput(props: Props): React.Node {
@@ -26,6 +27,7 @@ export default function DistanceInput(props: Props): React.Node {
 
   const focusTextInput = () => {
     inputRef.current.focus();
+    props.onFocus();
   };
 
   const onChangeText = (text: string) => {

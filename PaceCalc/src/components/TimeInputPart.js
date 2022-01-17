@@ -18,6 +18,7 @@ type Props = {
   unit: "hr" | "min" | "sec",
   value: number,
   onChange: (number) => void,
+  onFocus: () => void,
 };
 
 export default function TimeInputPart(props: Props) {
@@ -25,6 +26,7 @@ export default function TimeInputPart(props: Props) {
 
   const focusTextInput = () => {
     inputRef.current.focus();
+    props.onFocus();
   };
 
   const onChangeText = (text: string) => {

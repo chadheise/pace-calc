@@ -16,11 +16,16 @@ import {
 type Props = {
   time: Time,
   onChange: (Time) => void,
+  onFocus: () => void,
+  onLayout: ({ nativeEvent: LayoutEvent }) => void,
 };
 
 export default function TimeInput(props: Props): React.Node {
   return (
-    <View style={[sharedStyles.mainButton, styles.button]}>
+    <View
+      onLayout={props.onLayout}
+      style={[sharedStyles.mainButton, styles.button]}
+    >
       <TimeInputPart
         unit="hr"
         value={props.time.hr}
@@ -31,6 +36,7 @@ export default function TimeInput(props: Props): React.Node {
             sec: props.time.sec,
           })
         }
+        onFocus={props.onFocus}
       />
       <TimeInputPart
         unit="min"
@@ -42,6 +48,7 @@ export default function TimeInput(props: Props): React.Node {
             sec: props.time.sec,
           })
         }
+        onFocus={props.onFocus}
       />
       <TimeInputPart
         unit="sec"
@@ -53,6 +60,7 @@ export default function TimeInput(props: Props): React.Node {
             sec: val,
           })
         }
+        onFocus={props.onFocus}
       />
     </View>
   );

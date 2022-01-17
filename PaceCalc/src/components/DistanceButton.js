@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.accent1,
-    fontSize: 12,
   },
 });
 

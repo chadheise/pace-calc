@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import DistanceButton from "./src/components/DistanceButton";
@@ -40,6 +40,24 @@ export default function App(props: Props): React.Node {
     min: 0,
     sec: 0,
   });
+  const [distanceInputYPosition, setDistanceInputYPosition] = useState(null);
+  const [timeInputYPosition, setTimeInputYPosition] = useState(null);
+
+  const scrollRef = useRef(null);
+
+  const topPadding = 40;
+  const scrollToDistanceInput = () => {
+    scrollRef.current.scrollTo({
+      x: 0,
+      y: distanceInputYPosition - topPadding,
+    });
+  };
+  const scrollToTimeInput = () => {
+    scrollRef.current.scrollTo({
+      x: 0,
+      y: timeInputYPosition - topPadding,
+    });
+  };
 
   const setDistance = (distance: string, unit: "km" | "mi") => {
     // Max input is 9 characters
@@ -68,6 +86,7 @@ export default function App(props: Props): React.Node {
     <ScrollView
       bounces={false}
       keyboardShouldPersistTaps={"handled"}
+      ref={scrollRef}
       style={styles.scrollView}
     >
       <View style={styles.container}>
@@ -105,25 +124,41 @@ export default function App(props: Props): React.Node {
           />
         </View>
 
-        <DistanceInput
-          distance={distanceStringToMiString(distance.label, distance.unit)}
-          unit="mi"
-          onChange={(distance: string) => {
-            setDistance(distance, "mi");
+        <View
+          onLayout={(event) => {
+            setDistanceInputYPosition(event.nativeEvent.layout.y);
           }}
-        />
+          style={styles.distanceInputContainer}
+        >
+          <DistanceInput
+            distance={distanceStringToMiString(distance.label, distance.unit)}
+            unit="mi"
+            onChange={(distance: string) => {
+              setDistance(distance, "mi");
+            }}
+            onFocus={scrollToDistanceInput}
+          />
 
-        <DistanceInput
-          distance={distanceStringToKmString(distance.label, distance.unit)}
-          unit="km"
-          onChange={(distance: string) => {
-            setDistance(distance, "km");
-          }}
-        />
+          <DistanceInput
+            distance={distanceStringToKmString(distance.label, distance.unit)}
+            unit="km"
+            onChange={(distance: string) => {
+              setDistance(distance, "km");
+            }}
+            onFocus={scrollToDistanceInput}
+          />
+        </View>
 
         <Header title="Time" />
 
-        <TimeInput time={time} onChange={(time) => setTime(time)} />
+        <TimeInput
+          time={time}
+          onChange={(time) => setTime(time)}
+          onFocus={scrollToTimeInput}
+          onLayout={(event) => {
+            setTimeInputYPosition(event.nativeEvent.layout.y);
+          }}
+        />
 
         <Header title="Pace" />
 
@@ -275,6 +310,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    width: "100%",
+  },
+  distanceInputContainer: {
     width: "100%",
   },
   scrollView: {
